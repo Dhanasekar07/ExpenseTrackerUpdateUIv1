@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F6F8">
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:paddingBottom="24dp">
+
+                <!-- Greeting -->
+                <TextView
+                    android:id="@+id/tvGreeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hello, User"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A2E"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Filter tabs -->
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tabDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="Day"
+                            android:textSize="13sp"
+                            android:textColor="#FFFFFF"
+                            android:gravity="center"
+                            android:background="@drawable/bg_filter_active"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/tabWeek"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="Week"
+                            android:textSize="13sp"
+                            android:textColor="#6B7280"
+                            android:gravity="center"
+                            android:background="@drawable/bg_filter_inactive"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/tabMonth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="Month"
+                            android:textSize="13sp"
+                            android:textColor="#6B7280"
+                            android:gravity="center"
+                            android:background="@drawable/bg_filter_inactive"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/tabCustom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="Custom"
+                            android:textSize="13sp"
+                            android:textColor="#6B7280"
+                            android:gravity="center"
+                            android:background="@drawable/bg_filter_inactive"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"/>
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </LinearLayout>
+
+            <!-- Expense Overview Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_rounded"
+                android:margin="16dp"
+                android:padding="20dp"
+                android:elevation="2dp">
+
+                <!-- Total spent -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Spent"
+                    android:textSize="12sp"
+                    android:textColor="#6B7280"/>
+
+                <TextView
+                    android:id="@+id/tvTotalSpent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹0"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A2E"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Pie chart + legend row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:orientation="horizontal">
+
+                    <!-- Pie chart -->
+                    <com.example.expensetracker.PieChartView
+                        android:id="@+id/pieChart"
+                        android:layout_width="160dp"
+                        android:layout_height="match_parent"/>
+
+                    <!-- Top 3 legend -->
+                    <LinearLayout
+                        android:id="@+id/legendContainer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center_vertical"
+                        android:paddingStart="12dp"/>
+                </LinearLayout>
+
+                <!-- See all button -->
+                <TextView
+                    android:id="@+id/btnSeeAllChart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See all ›"
+                    android:textSize="13sp"
+                    android:textColor="#2D6A4F"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+
+            <!-- Recent Transactions -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_rounded"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:padding="20dp"
+                android:elevation="2dp">
+
+                <!-- Header row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Recent transactions"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A2E"/>
+
+                    <TextView
+                        android:id="@+id/btnSeeAllTxn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="See All ›"
+                        android:textSize="13sp"
+                        android:textColor="#2D6A4F"/>
+                </LinearLayout>
+
+                <!-- Transaction list container -->
+                <LinearLayout
+                    android:id="@+id/transactionContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+
+                <TextView
+                    android:id="@+id/tvNoTransactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No transactions yet"
+                    android:textSize="14sp"
+                    android:textColor="#9CA3AF"
+                    android:gravity="center"
+                    android:padding="24dp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <include layout="@layout/layout_bottom_nav"/>
+
+</LinearLayout>

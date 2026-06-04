@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="brand_green">#2D6A4F</color>
+    <color name="brand_green_light">#52B788</color>
+    <color name="brand_green_pale">#D8F3DC</color>
+
+    <!-- Backgrounds -->
+    <color name="bg_screen">#F4F6F8</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_input">#F0F2F5</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A1A2E</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_hint">#9CA3AF</color>
+    <color name="text_white">#FFFFFF</color>
+
+    <!-- Category pastel colors -->
+    <color name="cat_food">#FDBA74</color>
+    <color name="cat_tea">#CAA47E</color>
+    <color name="cat_snacks">#FDE047</color>
+    <color name="cat_grocery">#FED7AA</color>
+    <color name="cat_medicine">#FCA5A5</color>
+    <color name="cat_mutual">#86EFAC</color>
+    <color name="cat_loan">#A7F3D0</color>
+    <color name="cat_shopping">#D6BBFA</color>
+    <color name="cat_online">#F472B6</color>
+    <color name="cat_movies">#E9D5FF</color>
+    <color name="cat_ott">#FBCFE8</color>
+    <color name="cat_grooming">#FDA4AF</color>
+    <color name="cat_fuel">#5EEAD4</color>
+    <color name="cat_transport">#67E8F9</color>
+    <color name="cat_rent">#93C5FD</color>
+    <color name="cat_internet">#7DD3FC</color>
+    <color name="cat_insurance">#A5B4FC</color>
+    <color name="cat_electricity">#C7D2FE</color>
+    <color name="cat_gas">#BAE6FD</color>
+
+    <!-- UI Elements -->
+    <color name="divider">#F0F0F0</color>
+    <color name="shadow">#0A000000</color>
+    <color name="red_delete">#EF4444</color>
+    <color name="green_success">#22C55E</color>
+    <color name="overlay_dim">#80000000</color>
+
+    <!-- Night mode support -->
+    <color name="green_primary">#2D6A4F</color>
+    <color name="green_dark">#1B4332</color>
+    <color name="green_light">#52B788</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey_light">#F4F6F8</color>
+</resources>

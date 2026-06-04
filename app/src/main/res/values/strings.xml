@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Expense Tracker</string>
+    <string name="delete_confirmation">Are you sure? This category will be deleted permanently.</string>
+    <string name="delete_transaction_confirmation">Are you sure? This transaction will be deleted permanently.</string>
+    <string name="privacy_title">100% Private &amp; Local</string>
+    <string name="privacy_body">We do not own servers, and we never collect your data. Every transaction is parsed and stored entirely offline on your device.</string>
+</resources>

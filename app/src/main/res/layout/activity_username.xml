@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F6F8"
+    android:padding="32dp">
+
+    <!-- Person Icon -->
+    <ImageView
+        android:id="@+id/imgPerson"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_person"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:id="@+id/imgPerson"/>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Let's personalize\nyour profile"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#1A1A2E"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        android:layout_below="@id/imgPerson"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"/>
+
+    <!-- Username input with underline only -->
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="UserName"
+        android:textSize="22sp"
+        android:textColor="#1A1A2E"
+        android:textColorHint="#9CA3AF"
+        android:gravity="center"
+        android:background="@drawable/bg_input_underline"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:inputType="textPersonName"
+        android:layout_below="@id/tvTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:cursorVisible="true"/>
+
+    <!-- Go Ahead Button at bottom -->
+    <Button
+        android:id="@+id/btnGoAhead"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Go ahead"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal"
+        android:background="@drawable/bg_button_green"
+        android:stateListAnimator="@null"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"/>
+
+</RelativeLayout>
