@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +17,7 @@ import java.util.*
 
 class TransactionsActivity : AppCompatActivity() {
 
-    private lateinit var db: ExpenseDbHelper
+    private lateinit var db       : ExpenseDbHelper
     private lateinit var container: LinearLayout
 
     private var currentFilter = "day"
@@ -29,20 +31,18 @@ class TransactionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transactions)
 
-        db            = ExpenseDbHelper(this)
-        container     = findViewById(R.id.transactionContainer)
-        isStackEntry  = intent.getStringExtra("entry") == "stack"
+        db           = ExpenseDbHelper(this)
+        container    = findViewById(R.id.transactionContainer)
+        isStackEntry = intent.getStringExtra("entry") == "stack"
 
-        val btnBack  = findViewById<ImageView>(R.id.btnBack)
-        val btnSearch= findViewById<ImageView>(R.id.btnSearch)
-        val searchBar= findViewById<LinearLayout>(R.id.searchBar)
-        val etSearch = searchBar.findViewById<EditText>(R.id.etSearch)
+        val btnBack   = findViewById<ImageView>(R.id.btnBack)
+        val btnSearch = findViewById<ImageView>(R.id.btnSearch)
+        val searchBar = findViewById<LinearLayout>(R.id.searchBar)
+        val etSearch  = searchBar.findViewById<EditText>(R.id.etSearch)
 
-        // Show/hide back arrow based on entry path
         btnBack.visibility = if (isStackEntry) View.VISIBLE else View.GONE
         btnBack.setOnClickListener { finish() }
 
-        // Search toggle
         btnSearch.setOnClickListener {
             searchBar.visibility =
                 if (searchBar.visibility == View.VISIBLE) View.GONE else View.VISIBLE
@@ -50,11 +50,11 @@ class TransactionsActivity : AppCompatActivity() {
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                searchQuery = s.toString().lowercase()
+                searchQuery = s?.toString()?.lowercase() ?: ""
                 refreshList()
             }
-            override fun beforeTextChanged(s: CharSequence?,a:Int,b:Int,c:Int){}
-            override fun onTextChanged(s: CharSequence?,a:Int,b:Int,c:Int){}
+            override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
         })
 
         setupFilterTabs()
@@ -62,12 +62,17 @@ class TransactionsActivity : AppCompatActivity() {
         refreshList()
     }
 
-    override fun onResume() { super.onResume(); refreshList() }
+    override fun onResume() {
+        super.onResume()
+        refreshList()
+    }
 
     private fun setupFilterTabs() {
         val tabs = mapOf(
-            R.id.tabDay to "day", R.id.tabWeek to "week",
-            R.id.tabMonth to "month", R.id.tabCustom to "custom"
+            R.id.tabDay    to "day",
+            R.id.tabWeek   to "week",
+            R.id.tabMonth  to "month",
+            R.id.tabCustom to "custom"
         )
         tabs.forEach { (id, filter) ->
             findViewById<TextView>(id).setOnClickListener {
@@ -80,8 +85,10 @@ class TransactionsActivity : AppCompatActivity() {
 
     private fun updateTabUI() {
         listOf(
-            R.id.tabDay to "day", R.id.tabWeek to "week",
-            R.id.tabMonth to "month", R.id.tabCustom to "custom"
+            R.id.tabDay    to "day",
+            R.id.tabWeek   to "week",
+            R.id.tabMonth  to "month",
+            R.id.tabCustom to "custom"
         ).forEach { (id, f) ->
             val tv = findViewById<TextView>(id)
             if (f == currentFilter) {
@@ -98,15 +105,15 @@ class TransactionsActivity : AppCompatActivity() {
         val cal = Calendar.getInstance()
         DatePickerDialog(this, { _, y, m, d ->
             val from = Calendar.getInstance().apply {
-                set(y,m,d,0,0,0); set(Calendar.MILLISECOND,0)
+                set(y, m, d, 0, 0, 0); set(Calendar.MILLISECOND, 0)
             }.timeInMillis
             DatePickerDialog(this, { _, y2, m2, d2 ->
                 val to = Calendar.getInstance().apply {
-                    set(y2,m2,d2,23,59,59); set(Calendar.MILLISECOND,999)
+                    set(y2, m2, d2, 23, 59, 59); set(Calendar.MILLISECOND, 999)
                 }.timeInMillis
-                customFrom=from; customTo=to; currentFilter="custom"
+                customFrom = from; customTo = to; currentFilter = "custom"
                 updateTabUI(); refreshList()
-            }, y,m,d).show()
+            }, y, m, d).show()
         }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
     }
 
@@ -121,13 +128,14 @@ class TransactionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun getToTs() = if (currentFilter=="custom") customTo else System.currentTimeMillis()
+    private fun getToTs() =
+        if (currentFilter == "custom") customTo else System.currentTimeMillis()
 
     private fun refreshList() {
         container.removeAllViews()
+
         var expenses = db.getExpenses(getFromTs(), getToTs())
 
-        // Apply search filter
         if (searchQuery.isNotEmpty()) {
             expenses = expenses.filter {
                 it.category.lowercase().contains(searchQuery) ||
@@ -150,40 +158,33 @@ class TransactionsActivity : AppCompatActivity() {
             return
         }
 
-        // Group by date
-        val grouped = expenses.groupBy { expense ->
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            sdf.format(Date(expense.timestamp))
-        }
-
-        val today     = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-        val yesterday = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(
-            Date(System.currentTimeMillis() - 86400000)
-        )
+        val dateFmt   = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val today     = dateFmt.format(Date())
+        val yesterday = dateFmt.format(Date(System.currentTimeMillis() - 86_400_000L))
+        val grouped   = expenses.groupBy { dateFmt.format(Date(it.timestamp)) }
 
         grouped.forEach { (dateKey, txns) ->
-            // Date header
-            val header = when (dateKey) {
+            val headerText = when (dateKey) {
                 today     -> "TODAY"
                 yesterday -> "YESTERDAY"
-                else -> SimpleDateFormat("dd MMM yyyy",Locale.getDefault())
-                    .format(SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).parse(dateKey)!!)
-                    .uppercase()
+                else -> {
+                    val parsed = dateFmt.parse(dateKey)
+                    SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                        .format(parsed ?: Date()).uppercase()
+                }
             }
+
             container.addView(TextView(this).apply {
-                text     = header
-                textSize = 12sp
+                text     = headerText
+                textSize = 12f
                 setTextColor(Color.parseColor("#9CA3AF"))
-                typeface = android.graphics.Typeface.DEFAULT_BOLD
+                typeface = Typeface.DEFAULT_BOLD
                 setPadding(0, 16, 0, 8)
-                letterSpacing = 0.05f
             })
 
             txns.forEach { expense -> addTransactionRow(expense) }
         }
     }
-
-    private val TextView.textSize: Float get() = 12f
 
     private fun addTransactionRow(expense: Expense) {
         val cat = CategoryManager.getCategoryByName(expense.category)
@@ -200,12 +201,11 @@ class TransactionsActivity : AppCompatActivity() {
             ).apply { setMargins(0, 0, 0, 8) }
         }
 
-        // Icon circle
         val iconBg = LinearLayout(this).apply {
-            val lp = LinearLayout.LayoutParams(44, 44).apply { setMargins(0,0,12,0) }
-            layoutParams = lp; gravity = android.view.Gravity.CENTER
-            background = android.graphics.drawable.GradientDrawable().apply {
-                shape = android.graphics.drawable.GradientDrawable.OVAL
+            layoutParams = LinearLayout.LayoutParams(44, 44).apply { setMargins(0, 0, 12, 0) }
+            gravity      = android.view.Gravity.CENTER
+            background   = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
                 setColor(Color.parseColor(cat?.colorHex ?: "#F0F2F5"))
             }
         }
@@ -220,47 +220,49 @@ class TransactionsActivity : AppCompatActivity() {
         info.addView(TextView(this).apply {
             text = expense.category; textSize = 14f
             setTextColor(Color.parseColor("#1A1A2E"))
-            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            typeface = Typeface.DEFAULT_BOLD
         })
         info.addView(TextView(this).apply {
             text = sdf.format(Date(expense.timestamp)); textSize = 11f
             setTextColor(Color.parseColor("#9CA3AF"))
         })
 
-        val amtText = if (expense.amount > 0)
-            "$currency${String.format("%.0f", expense.amount)}" else "$currency-"
         val amt = TextView(this).apply {
-            text = amtText; textSize = 14f
+            text = if (expense.amount > 0) "$currency${String.format("%.0f", expense.amount)}" else "$currency-"
+            textSize = 14f
             setTextColor(Color.parseColor("#EF4444"))
-            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            typeface = Typeface.DEFAULT_BOLD
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0,0,8,0) }
+            ).apply { setMargins(0, 0, 8, 0) }
         }
 
-        // Edit icon
         val btnEdit = ImageView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(28,28).apply { setMargins(0,0,4,0) }
+            layoutParams = LinearLayout.LayoutParams(28, 28).apply { setMargins(0, 0, 4, 0) }
             setImageResource(R.drawable.ic_edit)
         }
         btnEdit.setOnClickListener { showEditCategorySheet(expense) }
 
-        // Delete icon
         val btnDelete = ImageView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(28,28)
+            layoutParams = LinearLayout.LayoutParams(28, 28)
             setImageResource(R.drawable.ic_delete)
         }
         btnDelete.setOnClickListener {
             AlertDialog.Builder(this)
                 .setTitle("Delete Transaction")
                 .setMessage(getString(R.string.delete_transaction_confirmation))
-                .setPositiveButton("Delete") { _,_ ->
+                .setPositiveButton("Delete") { _, _ ->
                     db.deleteExpense(expense.id)
                     refreshList()
                 }
                 .setNegativeButton("Cancel", null)
-                .show()
+                .create().apply {
+                    setOnShowListener {
+                        getButton(AlertDialog.BUTTON_POSITIVE)
+                            .setTextColor(Color.parseColor("#EF4444"))
+                    }
+                }.show()
         }
 
         row.addView(iconBg); row.addView(info)
@@ -270,37 +272,36 @@ class TransactionsActivity : AppCompatActivity() {
 
     private fun showEditCategorySheet(expense: Expense) {
         val categories = CategoryManager.activeCategories
-        val names = categories.map { it.name }.toTypedArray()
         AlertDialog.Builder(this)
             .setTitle("Re-assign Category")
-            .setItems(names) { _, which ->
-                val newCat = categories[which]
-                db.updateExpenseCategory(expense.id, newCat.name)
+            .setItems(categories.map { it.name }.toTypedArray()) { _, which ->
+                db.updateExpenseCategory(expense.id, categories[which].name)
                 refreshList()
             }
             .show()
     }
 
-    private fun getCategoryEmoji(name: String): String {
-        return when (name.lowercase()) {
-            "food" -> "🍽️"; "tea/coffee" -> "☕"; "fuel" -> "⛽"
-            "shopping" -> "🛍️"; "transport" -> "🚌"; "grocery" -> "🛒"
-            "medicine" -> "💊"; "movies" -> "🎬"; "ott" -> "📺"
-            else -> "💰"
-        }
+    private fun getCategoryEmoji(name: String) = when (name.lowercase()) {
+        "food" -> "🍽️"; "tea/coffee" -> "☕"; "fuel" -> "⛽"
+        "shopping" -> "🛍️"; "transport" -> "🚌"; "grocery" -> "🛒"
+        "medicine" -> "💊"; "movies" -> "🎬"; "ott" -> "📺"
+        "snacks" -> "🍪"; "mutual funds" -> "📈"; "loan emi" -> "💳"
+        "online order" -> "📦"; "personal grooming" -> "✂️"
+        "internet" -> "📶"; "electricity" -> "⚡"; "gas" -> "🔥"
+        "house rent" -> "🏠"; "insurance premium" -> "🛡️"
+        else -> "💰"
     }
 
     private fun setupBottomNav() {
         if (!isStackEntry) {
-            // Highlight transactions tab
             findViewById<ImageView>(R.id.navTransactionsIcon).alpha = 1f
             findViewById<TextView>(R.id.navTransactionsLabel)
                 .setTextColor(Color.parseColor("#2D6A4F"))
         }
         findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            startActivity(Intent(this, MainActivity::class.java)); finish()
         }
+        findViewById<LinearLayout>(R.id.navTransactions).setOnClickListener {}
         findViewById<LinearLayout>(R.id.navCategory).setOnClickListener {
             startActivity(Intent(this, ManageCategoriesActivity::class.java))
         }
